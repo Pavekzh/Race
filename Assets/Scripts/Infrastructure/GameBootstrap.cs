@@ -1,5 +1,4 @@
 using Fusion;
-using System;
 using UnityEngine;
 
 public class GameBootstrap : MonoBehaviour
@@ -10,7 +9,10 @@ public class GameBootstrap : MonoBehaviour
     [SerializeField] private NetworkRunner network;
     [SerializeField] private NetworkSceneManagerDefault sceneManager;
     [Header("Services")]
+    [SerializeField] private Transform sectionsParent;
+    [SerializeField] private Transform obstaclesParent;
     [SerializeField] private GameStarter gameStarter;
+    [SerializeField] private WorldGenerator worldGenerator;
     [Header("UI")]
     [SerializeField] private MatchmakingUI matchmakingUI;
 
@@ -31,14 +33,21 @@ public class GameBootstrap : MonoBehaviour
         Instance = this;
 
         InitMatchMakingUI();
-        await InitNetwork();
+        InitGameStarter();
         InitLevel();
+        
+        await InitNetwork();
         CreatePlayer();
+    }
+
+    private void InitGameStarter()
+    {
+        gameStarter.Init(matchmakingUI,worldGenerator);
     }
 
     private void InitMatchMakingUI()
     {
-        matchmakingUI.Init(gameStarter);
+        matchmakingUI.Init();
     }
 
     private async System.Threading.Tasks.Task InitNetwork()
@@ -56,7 +65,7 @@ public class GameBootstrap : MonoBehaviour
     
     private void InitLevel()
     {
-        
+        worldGenerator.Init(sectionsParent, obstaclesParent);
     }
 
     private void CreatePlayer()

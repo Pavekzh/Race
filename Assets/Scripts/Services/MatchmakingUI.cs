@@ -1,8 +1,4 @@
-﻿using Fusion;
-using Fusion.Sockets;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,13 +15,17 @@ public class MatchmakingUI:MonoBehaviour
 
     private int players = 0;
 
-    private GameStarter gameStarter;
+    public event System.Action OpponentsScreenShown;
 
-    public void Init(GameStarter gameStarter)
+    public void Init()
     {
-        this.gameStarter = gameStarter;
-
         searchingScreen.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        opponentsScreen.SetActive(false);
+        searchingScreen.SetActive(false);
     }
 
     public void PlayerJoined()
@@ -52,7 +52,6 @@ public class MatchmakingUI:MonoBehaviour
         searchingScreen.SetActive(false);
         opponentsScreen.SetActive(true);
         yield return new WaitForSeconds(showOpponentsScreenTime);
-        opponentsScreen.SetActive(false);
-        gameStarter.OpponentsScreenShown();
+        OpponentsScreenShown?.Invoke();
     }
 }
