@@ -5,6 +5,7 @@ public class GameBootstrap : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] private PlayerFactory playerFactory;
+    [SerializeField] private InputDetector inputDetector;
     [Header("Network")]
     [SerializeField] private NetworkRunner network;
     [SerializeField] private NetworkSceneManagerDefault sceneManager;
@@ -35,6 +36,7 @@ public class GameBootstrap : MonoBehaviour
         InitMatchMakingUI();
         InitGameStarter();
         InitLevel();
+        InitInput();
         
         await InitNetwork();
         CreatePlayer();
@@ -68,6 +70,11 @@ public class GameBootstrap : MonoBehaviour
         worldGenerator.Init(sectionsParent, obstaclesParent);
     }
 
+    private void InitInput()
+    {
+        inputDetector.Init();
+    }
+
     private void CreatePlayer()
     {
         playerFactory.CreatePlayer(network);
@@ -82,7 +89,7 @@ public class GameBootstrap : MonoBehaviour
         if (this.player == null)
             this.player = player;
 
-        player.Init();
+        player.Init(inputDetector);
 
         gameStarter.AddReadyPlayer();
     }    
