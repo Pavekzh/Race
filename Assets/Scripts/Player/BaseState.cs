@@ -32,8 +32,9 @@ public abstract class BaseState
 
     public virtual void Move()
     {
-        throw new NotImplementedException();
+        player.CC.Move(player.MoveDirection);
     }
+
 
     public virtual void SlowDown()
     {

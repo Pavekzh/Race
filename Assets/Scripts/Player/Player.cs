@@ -1,14 +1,20 @@
 using UnityEngine;
+using Fusion;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
+    public Vector3 MoveDirection { get => Vector3.forward; }
+
+    private bool isRaceStarted;
+
+    public Rigidbody Rigidbody { get; private set; }
+    public NetworkCharacterControllerPrototype CC { get; private set; }
 
     private StateMachine stateMachine;
     public DefaultState DefaultState { get; private set; }
     public OilState OilState { get; private set; }
     public NitroState NitroState { get; private set; }
     public NitroOilState NitroOilState { get; private set; }
-
     private bool isInit;
 
     public void Init(InputDetector inputDetector)
@@ -16,6 +22,9 @@ public class Player : MonoBehaviour
         inputDetector.OnLeftInput += OnLeftInput;
         inputDetector.OnRightInput += OnRightInput;
         inputDetector.OnNitroInput += OnNitroInput;
+
+        Rigidbody = GetComponent<Rigidbody>();
+        CC = GetComponent<NetworkCharacterControllerPrototype>();
 
         stateMachine = new StateMachine();
 
@@ -28,17 +37,26 @@ public class Player : MonoBehaviour
         isInit = true;
     }
 
+    public void StartRace()
+    {
+        if (HasStateAuthority)
+        {
+            isRaceStarted = true;
+        }
+
+    }
+
     public void SlowDown()
     {
-        if (isInit)
-        {
+        if (isRaceStarted)
+        {  
             stateMachine.CurrentState.SlowDown();
         }
     }
 
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
-        if(isInit)
+        if (isRaceStarted)
         {
             stateMachine.CurrentState.Move();
         }
@@ -46,7 +64,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isInit)
+        if (isRaceStarted)
         {
             stateMachine.CurrentState.Trigger(other);
         }
@@ -54,17 +72,26 @@ public class Player : MonoBehaviour
 
     private void OnNitroInput()
     {
-        stateMachine.CurrentState.InputNitro();
+        if (isRaceStarted)
+        {
+            stateMachine.CurrentState.InputNitro();
+        }
     }
 
     private void OnRightInput()
     {
-        stateMachine.CurrentState.InputRight();
+        if (isRaceStarted)
+        {
+            stateMachine.CurrentState.InputRight();
+        }
     }
 
     private void OnLeftInput()
     {
-        stateMachine.CurrentState.InputLeft();
+        if (isRaceStarted)
+        {
+            stateMachine.CurrentState.InputLeft();
+        }
     }
 
 

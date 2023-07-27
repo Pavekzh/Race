@@ -1,15 +1,16 @@
-﻿using UnityEngine;
-using Fusion;
+﻿using Fusion;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class GameStarter:NetworkBehaviour
+public class RaceStarter:NetworkBehaviour
 {    
-    private int readyPlayers = 0;
+    private List<Player> readyPlayers = new List<Player>();
     private bool isOpponentsScreenShown;
     private bool isLevelReady;
 
     [Networked] private int StartersReady { get; set; }
 
-    MatchmakingUI matchmaking;
+    private MatchmakingUI matchmaking;
 
     public void Init(MatchmakingUI matchmaking,WorldGenerator worldGenerator)
     {
@@ -17,11 +18,12 @@ public class GameStarter:NetworkBehaviour
         matchmaking.OpponentsScreenShown += OpponentsScreenShown;
         worldGenerator.LevelGenerated += LevelGenerated;
     }
-    public void AddReadyPlayer()
-    {
-        readyPlayers++;
 
-        if (readyPlayers == GameBootstrap.MaxPlayers && isOpponentsScreenShown && isLevelReady)
+    public void AddReadyPlayer(Player player)
+    {
+        readyPlayers.Add(player);
+
+        if (readyPlayers.Count == GameBootstrap.MaxPlayers && isOpponentsScreenShown && isLevelReady)
             RPC_GameStarterReady();
     }
 
@@ -29,7 +31,7 @@ public class GameStarter:NetworkBehaviour
     {
         isLevelReady = true;
 
-        if (readyPlayers == GameBootstrap.MaxPlayers && isOpponentsScreenShown && isLevelReady)
+        if (readyPlayers.Count == GameBootstrap.MaxPlayers && isOpponentsScreenShown && isLevelReady)
             RPC_GameStarterReady();
     }
 
@@ -37,7 +39,7 @@ public class GameStarter:NetworkBehaviour
     {
         isOpponentsScreenShown = true;
 
-        if (readyPlayers == GameBootstrap.MaxPlayers && isOpponentsScreenShown && isLevelReady)
+        if (readyPlayers.Count == GameBootstrap.MaxPlayers && isOpponentsScreenShown && isLevelReady)
             RPC_GameStarterReady();
     }
 
@@ -54,7 +56,11 @@ public class GameStarter:NetworkBehaviour
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, InvokeLocal = true)]
     public void RPC_StartGame()
     {
-        matchmaking.Hide();
-        Debug.LogError("Game started");
+        matchmaking.Hide();        
+        
+        foreach(Player player in readyPlayers)
+        {
+            player.StartRace();
+        }
     }
 }

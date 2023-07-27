@@ -1,9 +1,11 @@
 using Fusion;
 using UnityEngine;
 
+
 public class GameBootstrap : MonoBehaviour
 {
     [Header("Player")]
+    [SerializeField] private CameraFollow cameraFollow;
     [SerializeField] private PlayerFactory playerFactory;
     [SerializeField] private InputDetector inputDetector;
     [Header("Network")]
@@ -12,7 +14,7 @@ public class GameBootstrap : MonoBehaviour
     [Header("Services")]
     [SerializeField] private Transform sectionsParent;
     [SerializeField] private Transform obstaclesParent;
-    [SerializeField] private GameStarter gameStarter;
+    [SerializeField] private RaceStarter gameStarter;
     [SerializeField] private WorldGenerator worldGenerator;
     [Header("UI")]
     [SerializeField] private MatchmakingUI matchmakingUI;
@@ -75,6 +77,11 @@ public class GameBootstrap : MonoBehaviour
         inputDetector.Init();
     }
 
+    private void InitCamera()
+    {
+        cameraFollow.Init(player.transform);
+    }
+
     private void CreatePlayer()
     {
         playerFactory.CreatePlayer(network);
@@ -87,11 +94,15 @@ public class GameBootstrap : MonoBehaviour
         matchmakingUI.PlayerJoined();
 
         if (this.player == null)
-            this.player = player;
+        {
+            this.player = player;        
+            InitCamera();
+        }
+
 
         player.Init(inputDetector);
 
-        gameStarter.AddReadyPlayer();
-    }    
-   
+        gameStarter.AddReadyPlayer(player);
+
+    }
 }
