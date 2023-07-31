@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameBootstrap : MonoBehaviour
 {
     [Header("Player")]
+    [SerializeField] private int firstStartLane = 1;
+    [SerializeField] private int secondStartLane = 2;
     [SerializeField] private CameraFollow cameraFollow;
     [SerializeField] private PlayerFactory playerFactory;
     [SerializeField] private InputDetector inputDetector;
@@ -84,7 +86,13 @@ public class GameBootstrap : MonoBehaviour
 
     private void CreatePlayer()
     {
-        playerFactory.CreatePlayer(network);
+        int startLane;
+        if (network.IsSharedModeMasterClient)
+            startLane = firstStartLane;
+        else
+            startLane = secondStartLane;
+
+        playerFactory.CreatePlayer(network,worldGenerator,startLane);
     }
 
 
@@ -97,10 +105,10 @@ public class GameBootstrap : MonoBehaviour
         {
             this.player = player;        
             InitCamera();
+            player.Init(inputDetector, worldGenerator,firstStartLane);
         }
-
-
-        player.Init(inputDetector);
+        else
+            player.Init(inputDetector, worldGenerator,secondStartLane);
 
         gameStarter.AddReadyPlayer(player);
 

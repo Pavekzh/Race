@@ -3,38 +3,42 @@ using Fusion;
 
 public class Player : NetworkBehaviour
 {
+    [SerializeField] private float changingLaneSpeed = 1;
+
+    public float ChangingLaneSpeed { get => changingLaneSpeed; }
+
+
     public Vector3 MoveDirection { get => Vector3.forward; }
+    public int CurrentLane { get; set; }
 
     private bool isRaceStarted;
 
     public Rigidbody Rigidbody { get; private set; }
-    public NetworkCharacterControllerPrototype CC { get; private set; }
+    public NetworkCarController CC { get; private set; }
 
-    private StateMachine stateMachine;
-    public DefaultState DefaultState { get; private set; }
-    public OilState OilState { get; private set; }
-    public NitroState NitroState { get; private set; }
-    public NitroOilState NitroOilState { get; private set; }
-    private bool isInit;
+    private StateMachine<BaseState> stateMachine;
 
-    public void Init(InputDetector inputDetector)
+    public WorldGenerator WorldGenerator { get; private set; }
+
+    public void Init(InputDetector inputDetector,WorldGenerator worldGenerator,int lane)
     {
+        this.CurrentLane = lane;
+        this.WorldGenerator = worldGenerator;
         inputDetector.OnLeftInput += OnLeftInput;
         inputDetector.OnRightInput += OnRightInput;
         inputDetector.OnNitroInput += OnNitroInput;
 
         Rigidbody = GetComponent<Rigidbody>();
-        CC = GetComponent<NetworkCharacterControllerPrototype>();
+        CC = GetComponent<NetworkCarController>();
 
-        stateMachine = new StateMachine();
+        stateMachine = new StateMachine<BaseState>();
 
-        DefaultState = new DefaultState(stateMachine, this);
-        OilState = new OilState(stateMachine, this);
-        NitroState = new NitroState(stateMachine, this); 
-        NitroOilState = new NitroOilState(stateMachine, this);
+        stateMachine.AddState(new DefaultState(stateMachine, this));
+        stateMachine.AddState(new OilState(stateMachine, this));
+        stateMachine.AddState(new NitroState(stateMachine, this));
+        stateMachine.AddState(new NitroOilState(stateMachine, this));
 
-        stateMachine.Init(DefaultState);
-        isInit = true;
+        stateMachine.InitState<DefaultState>();
     }
 
     public void StartRace()

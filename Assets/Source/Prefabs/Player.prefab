@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 36598488790026283}
   - component: {fileID: 5493336418766817776}
   - component: {fileID: 9017514424756005384}
-  - component: {fileID: 1123607266848920690}
+  - component: {fileID: -240212764775352680}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -61,7 +61,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 36598488790026283}
   - {fileID: 5493336418766817776}
-  - {fileID: 1123607266848920690}
+  - {fileID: -240212764775352680}
   SimulationBehaviours: []
 --- !u!114 &36598488790026283
 MonoBehaviour:
@@ -90,9 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  currentSpeed: 0
-  maxSpeed: 20
-  acceleration: 5
+  changingLaneSpeed: 20
 --- !u!143 &9017514424756005384
 CharacterController:
   m_ObjectHideFlags: 0
@@ -111,7 +109,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.02, z: 0}
---- !u!114 &1123607266848920690
+--- !u!114 &-240212764775352680
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,10 +118,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 382424446251071014}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
+  m_Script: {fileID: 11500000, guid: f6d668980db84354fb7ff816ec1b6eb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 2
+  _interpolationDataSource: 0
   InterpolationSpace: 0
   InterpolationTarget: {fileID: 6344385786139515246}
   InterpolateErrorCorrection: 1
@@ -140,10 +138,9 @@ MonoBehaviour:
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
   gravity: -20
-  jumpImpulse: 8
   acceleration: 5
-  braking: 10
-  maxSpeed: 15
+  braking: 5
+  maxSpeed: 20
   rotationSpeed: 15
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}

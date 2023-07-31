@@ -29,9 +29,14 @@ public class WorldGenerator:NetworkBehaviour
     [SerializeField] private float rowLength = 5;
     [SerializeField] private int maxObstaclesInRow = 2;
 
-    private float levelRealLength;
-
     [Networked] private int RandomSeed { get; set; }
+
+    public float[] LanesXs { get; private set; }
+
+    private float[] laneXs;
+
+    private Vector3 firstPlace;
+    private float levelRealLength;
 
     public event System.Action LevelGenerated;
 
@@ -42,6 +47,20 @@ public class WorldGenerator:NetworkBehaviour
     {
         this.sectionsParent = sectionsParent;
         this.obstacleParent = obstacleParent;
+
+        LanesXs = new float[placesInRow];
+        laneXs = new float[placesInRow];
+
+        float firstPlaceX = startPoint.x - (placeWidth * placesInRow) / 2;
+        float firstPlaceZ = startPoint.z + safeZoneLength;
+        firstPlace = new Vector3(firstPlaceX, startPoint.y, firstPlaceZ);
+
+        for (int i = 0; i < placesInRow; i++)
+        {            
+            LanesXs[i] = (firstPlace.x + placeWidth * i) + (placeWidth / 2);
+            laneXs[i] = firstPlace.x + placeWidth * i;
+        }
+
     }
 
     public override void Spawned()
@@ -96,10 +115,6 @@ public class WorldGenerator:NetworkBehaviour
     private void BuildObjects()
     {
         var LevelObjects = FormLevelObjects();
-
-        float firstPlaceX = startPoint.x - (placeWidth * placesInRow) / 2;
-        float firstPlaceZ = startPoint.z + safeZoneLength;
-        Vector3 firstPlace = new Vector3(firstPlaceX, startPoint.y, firstPlaceZ);
 
         foreach(var obj in LevelObjects)
         {

@@ -3,7 +3,7 @@ using System;
 
 public class NitroOilState : BaseState
 {
-    public NitroOilState(StateMachine stateMachine, Player player) : base(stateMachine, player) { }
+    public NitroOilState(StateMachine<BaseState> stateMachine, Player player) : base(stateMachine, player) { }
 
     public override void Enter()
     {

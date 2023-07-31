@@ -1,19 +1,43 @@
-﻿
-public class StateMachine
+﻿using System.Collections.Generic;
+using System.Linq;
+
+
+public class StateMachine<T> where T : BaseState
 {
-    public BaseState CurrentState { get; private set; }
+    private T currentState;
+    protected List<T> states;
 
-    public void Init(BaseState state)
+    public T CurrentState
     {
-        CurrentState = state;
-        CurrentState.Enter();
+        get => currentState;
+        private set
+        {
+            if (currentState != null)
+                currentState.Exit();
+
+            currentState = value;
+            currentState.Enter();
+        }
     }
 
-    public void ChangeState(BaseState state)
+    public StateMachine()
     {
-        CurrentState.Exit();
-
-        CurrentState = state;
-        CurrentState.Enter();
+        states = new List<T>();
     }
+
+    public void AddState(T state)
+    {
+        states.Add(state);
+    }
+
+    public void InitState<U>() where U : T
+    {
+        CurrentState = states.FirstOrDefault(state => state is U);
+    }
+
+    public void SwitchState<U>() where U : T
+    {
+        CurrentState = states.FirstOrDefault(state => state is U);
+    }
+
 }

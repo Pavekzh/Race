@@ -2,7 +2,7 @@
 
 public class DefaultState : BaseState
 {
-    public DefaultState(StateMachine stateMachine, Player player) : base(stateMachine, player) { }
+    public DefaultState(StateMachine<BaseState> stateMachine, Player player) : base(stateMachine, player) { }
 
     public override void Enter()
     {
