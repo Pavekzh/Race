@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.VFX;
 
 public class Nitro : MonoBehaviour, IObstacle
 {
+    [SerializeField] private GameObject view;
     [SerializeField] private float amount = 5;
-    [SerializeField] private float lifetimeAfterPick = 1;
+    [SerializeField] private VisualEffect visualEffect;
 
     public ObstacleType Type => ObstacleType.Nitro;
 
@@ -12,13 +14,8 @@ public class Nitro : MonoBehaviour, IObstacle
 
     private void OnTriggerEnter(Collider other)
     {
-        gameObject.SetActive(false);
-        StartCoroutine(Timer());
+        view.SetActive(false);
+        visualEffect.Play();
     }
 
-    private IEnumerator Timer()
-    {
-        yield return new WaitForSeconds(lifetimeAfterPick);
-        Destroy(gameObject);
-    }
 }
