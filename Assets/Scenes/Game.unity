@@ -823,12 +823,12 @@ MonoBehaviour:
     type: 3}
   sections:
   - {fileID: 1378099032946511659, guid: 8bde1bd83e229b7429e72766c0d765cf, type: 3}
-  levelLength: 80
+  levelLength: 140
   startPoint: {x: 0, y: 0, z: 0}
   spawnObjects:
   - Prefab: {fileID: 4641495055023158371, guid: 4c52d0b3a227a9049afa1c1890fd0909,
       type: 3}
-    ProportionalProbability: 1
+    ProportionalProbability: 0.238
     IsObstacle: 0
   - Prefab: {fileID: 6402399737061034308, guid: 1c376d790bec30546bcabe790522b74b,
       type: 3}
@@ -838,11 +838,19 @@ MonoBehaviour:
       type: 3}
     ProportionalProbability: 1
     IsObstacle: 1
-  emptyPlaceProbability: 0.491
+  - Prefab: {fileID: 4809973078556504706, guid: 12e06d3d32be0e742bf18b462e336928,
+      type: 3}
+    ProportionalProbability: 1
+    IsObstacle: 1
+  - Prefab: {fileID: 5462361985671589350, guid: 7f6b0cc8854868f49ba657373274b73c,
+      type: 3}
+    ProportionalProbability: 1
+    IsObstacle: 1
+  emptyPlaceProbability: 0.657
   safeZoneLength: 20
   placesInRow: 4
   placeWidth: 5
-  rowLength: 14
+  rowLength: 17
   maxObstaclesInRow: 2
 --- !u!4 &911995883
 Transform:
@@ -1224,11 +1232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5531d1e93e730c445979b23b12139c12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  masterClientLane: 1
-  clientLane: 2
 --- !u!114 &1109141813
 MonoBehaviour:
   m_ObjectHideFlags: 0

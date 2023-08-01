@@ -9,9 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4201070987925862942}
-  m_Layer: 0
-  m_Name: Obstacle_2
-  m_TagString: Untagged
+  - component: {fileID: 1767509069386415809}
+  - component: {fileID: -7512378577598149134}
+  m_Layer: 7
+  m_Name: Car_2
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +34,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1767509069386415809
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8499392736171610893}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.1030357, y: 1.7532927, z: 4.8606253}
+  m_Center: {x: 2.4885564, y: 0.9147126, z: 3.3427362}
+--- !u!114 &-7512378577598149134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8499392736171610893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd4f52e742dfcd84e8f1caaaa9cb99e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resetedSpeed: 0
 --- !u!1001 &1478136804597671869
 PrefabInstance:
   m_ObjectHideFlags: 0

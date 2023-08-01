@@ -11,6 +11,7 @@ public class CameraFollow:MonoBehaviour
     public void Init(Transform target)
     {
         this.offset = transform.position - target.position;
+        this.offset = new Vector3(0, offset.y, offset.z);
         this.target = target;
     }
 

@@ -9,11 +9,34 @@ using UnityEngine;
 public class NetworkCarController : NetworkTransform
 {
     [Header("Character Controller Settings")]
-    public float gravity = -20.0f;
-    public float acceleration = 10.0f;
-    public float braking = 10.0f;
-    public float maxSpeed = 2.0f;
-    public float rotationSpeed = 15.0f;
+    [SerializeField] private float gravity = -20.0f;
+    [SerializeField] private float acceleration = 10.0f;
+    [SerializeField] private float braking = 10.0f;
+    [SerializeField] private float maxSpeed = 2.0f;
+    [SerializeField] private float rotationSpeed = 15.0f;
+
+    private float defaultMaxSpeed;
+    private float defaultAcceleration;
+
+    public void SetMultipliedAcceleration(float multiplier)
+    {
+        acceleration = defaultAcceleration * multiplier;
+    }
+
+    public void SetMultipliedMaxSpeed(float multiplier)
+    {
+        maxSpeed = defaultMaxSpeed * multiplier;
+    }
+
+    public void SetDefaultAcceleration()
+    {
+        acceleration = defaultAcceleration;
+    }
+
+    public void SetDefaultMaxSpeed()
+    {
+        maxSpeed = defaultMaxSpeed;
+    }
 
     [Networked]
     [HideInInspector]
@@ -40,6 +63,8 @@ public class NetworkCarController : NetworkTransform
     protected override void Awake()
     {
         base.Awake();
+        defaultAcceleration = acceleration;
+        defaultMaxSpeed = maxSpeed;
         CacheController();
     }
 
@@ -71,6 +96,11 @@ public class NetworkCarController : NetworkTransform
         Controller.enabled = true;
     }
 
+
+    public virtual void SetSpeed(float speed)
+    {
+        this.Velocity = Velocity.normalized * speed;
+    }
 
     public virtual void SetPosition(Vector3 position)
     {

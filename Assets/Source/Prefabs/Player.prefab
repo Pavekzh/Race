@@ -91,6 +91,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   changingLaneSpeed: 20
+  obstacleTag: Obstacle
+  nitroSpeedMultiplier: 1.5
+  nitroAccelerationMultiplier: 3
+  maxNitro: 50
+  nitro: 0
+  nitroConsumption: 10
 --- !u!143 &9017514424756005384
 CharacterController:
   m_ObjectHideFlags: 0
@@ -108,7 +114,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.02, z: 0}
+  m_Center: {x: 0, y: 1.02, z: 0.78}
 --- !u!114 &-240212764775352680
 MonoBehaviour:
   m_ObjectHideFlags: 0

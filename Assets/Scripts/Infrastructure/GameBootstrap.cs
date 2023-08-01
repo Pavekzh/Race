@@ -101,14 +101,19 @@ public class GameBootstrap : MonoBehaviour
     {        
         matchmakingUI.PlayerJoined();
 
+        int startingLane;
+
         if (this.player == null)
         {
             this.player = player;        
             InitCamera();
-            player.Init(inputDetector, worldGenerator,firstStartLane);
+
+            startingLane = network.IsSharedModeMasterClient ? firstStartLane : secondStartLane;
         }
         else
-            player.Init(inputDetector, worldGenerator,secondStartLane);
+            startingLane = network.IsSharedModeMasterClient ? secondStartLane : firstStartLane;
+
+        player.Init(inputDetector, worldGenerator, startingLane);
 
         gameStarter.AddReadyPlayer(player);
 
