@@ -10,12 +10,34 @@ public class Nitro : MonoBehaviour, IObstacle
 
     public ObstacleType Type => ObstacleType.Nitro;
 
-    public float Amount { get => amount; }
+    private bool isPicked = false;
+
+    public float Extract()
+    {
+        float amount = 0;
+
+        amount = this.amount;
+        this.amount = 0;
+
+        return amount;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        view.SetActive(false);
-        visualEffect.Play();
+        if (!isPicked)
+        {
+            view.SetActive(false);
+            visualEffect.Play();
+            isPicked = true;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (isPicked)
+        {
+            this.amount = 0;
+        }
     }
 
 }

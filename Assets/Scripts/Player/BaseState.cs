@@ -74,7 +74,7 @@ public abstract class BaseState
             else if (obstacle.Type == ObstacleType.Nitro)
             {
                 Nitro nitro = obstacle as Nitro;
-                AddNitro(nitro.Amount);
+                AddNitro(nitro.Extract());
             }
         }
 
