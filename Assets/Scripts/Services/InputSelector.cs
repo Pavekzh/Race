@@ -14,11 +14,12 @@ class InputSelector:InputDetector
 
     public override void Init()
     {
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_STANDALONE || UNITY_EDITOR 
         selected = keyboardInput;
-        swipeInput.enabled = false;
+        swipeInput.SetEnabled(false);
 #elif UNITY_ANDROID || UNITY_IOS 
         selected = swipeInput;
+        swipeInput.SetEnabled(true);
         keyboardInput.enabled = false;
 #endif
     }
