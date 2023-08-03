@@ -15,6 +15,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private float nitro = 0;
     [SerializeField] private float nitroConsumption = 30;
 
+    public bool IsLocal { get; private set; }
 
     public float ChangingLaneSpeed { get => changingLaneSpeed; }
     public string ObstacleTag { get => obstacleTag; }
@@ -42,13 +43,13 @@ public class Player : NetworkBehaviour
     public NetworkCarController CC { get; private set; }
     public WorldGenerator WorldGenerator { get; private set; }
 
-    public void Init(InputDetector inputDetector,WorldGenerator worldGenerator,int lane)
+    public void Init(WorldGenerator worldGenerator,int lane,bool isLocal)
     {
         this.CurrentLane = lane;
         this.WorldGenerator = worldGenerator;
-        inputDetector.OnLeftInput += OnLeftInput;
-        inputDetector.OnRightInput += OnRightInput;
-        inputDetector.OnNitroInput += OnNitroInput;
+        this.IsLocal = isLocal;
+
+
 
         Rigidbody = GetComponent<Rigidbody>();
         CC = GetComponent<NetworkCarController>();
@@ -65,52 +66,41 @@ public class Player : NetworkBehaviour
 
     public void StartRace()
     {
-        if (HasStateAuthority)
-        {
-            isRaceStarted = true;
-        }
-
+        isRaceStarted = true;
     }
+
+    bool isDisplayed;
 
     public override void FixedUpdateNetwork()
     {
         if (isRaceStarted)
         {
+            if (HasStateAuthority)
+            {
+                PlayerInput input;
+                if (GetInput<PlayerInput>(out input))
+                {
+                    if (input.LeftInput)
+                        stateMachine.CurrentState.InputLeft();
+                    else if (input.RightInput)
+                        stateMachine.CurrentState.InputRight();
+
+                    if (input.NitroInput)
+                        stateMachine.CurrentState.InputNitro();
+
+                }
+            }
+
             stateMachine.CurrentState.Move();
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isRaceStarted)
+        if (isRaceStarted && HasStateAuthority)
         {
             stateMachine.CurrentState.Trigger(other);
         }
     }
-
-    private void OnNitroInput()
-    {
-        if (isRaceStarted)
-        {
-            stateMachine.CurrentState.InputNitro();
-        }
-    }
-
-    private void OnRightInput()
-    {
-        if (isRaceStarted)
-        {
-            stateMachine.CurrentState.InputRight();
-        }
-    }
-
-    private void OnLeftInput()
-    {
-        if (isRaceStarted)
-        {
-            stateMachine.CurrentState.InputLeft();
-        }
-    }
-
 
 }

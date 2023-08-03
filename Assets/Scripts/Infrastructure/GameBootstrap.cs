@@ -1,8 +1,12 @@
 using Fusion;
+using Fusion.Sockets;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 
-public class GameBootstrap : MonoBehaviour
+public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
 {
     [Header("Player")]
     [SerializeField] private int firstStartLane = 1;
@@ -16,7 +20,9 @@ public class GameBootstrap : MonoBehaviour
     [Header("Services")]
     [SerializeField] private Transform sectionsParent;
     [SerializeField] private Transform obstaclesParent;
-    [SerializeField] private RaceStarter gameStarter;
+    [SerializeField] private RaceStarter raceStarter;
+    [SerializeField] private RaceFinish raceFinish;
+    [SerializeField] private Timer raceTimer;
     [SerializeField] private WorldGenerator worldGenerator;
     [Header("UI")]
     [SerializeField] private MatchmakingUI matchmakingUI;
@@ -38,17 +44,22 @@ public class GameBootstrap : MonoBehaviour
         Instance = this;
 
         InitMatchMakingUI();
-        InitGameStarter();
+        InitRaceStarter();
+        InitRaceFinish();
         InitLevel();
         InitInput();
         
         await InitNetwork();
-        CreatePlayer();
     }
 
-    private void InitGameStarter()
+    private void InitRaceStarter()
     {
-        gameStarter.Init(matchmakingUI,worldGenerator);
+        raceStarter.Init(matchmakingUI,worldGenerator,raceTimer);
+    }
+
+    private void InitRaceFinish()
+    {
+        raceFinish.Init(raceTimer);
     }
 
     private void InitMatchMakingUI()
@@ -58,10 +69,10 @@ public class GameBootstrap : MonoBehaviour
 
     private async System.Threading.Tasks.Task InitNetwork()
     {
+        network.AddCallbacks(this);
         StartGameArgs args = new StartGameArgs()
         {
-            GameMode = GameMode.Shared,
-            SessionName = "",
+            GameMode = GameMode.AutoHostOrClient,
             Scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex,
             PlayerCount = MaxPlayers,
             SceneManager = sceneManager
@@ -71,12 +82,12 @@ public class GameBootstrap : MonoBehaviour
     
     private void InitLevel()
     {
-        worldGenerator.Init(sectionsParent, obstaclesParent);
+        worldGenerator.Init(sectionsParent, obstaclesParent,this);
     }
 
     private void InitInput()
     {
-        inputDetector.Init();
+        network.AddCallbacks(inputDetector);
     }
 
     private void InitCamera()
@@ -84,38 +95,116 @@ public class GameBootstrap : MonoBehaviour
         cameraFollow.Init(player.transform);
     }
 
-    private void CreatePlayer()
-    {
-        int startLane;
-        if (network.IsSharedModeMasterClient)
-            startLane = firstStartLane;
-        else
-            startLane = secondStartLane;
-
-        playerFactory.CreatePlayer(network,worldGenerator,startLane);
-    }
-
-
 
     public void InitPlayer(Player player)
     {        
         matchmakingUI.PlayerJoined();
 
         int startingLane;
+        bool isLocal;
 
-        if (this.player == null)
+        if (player.HasInputAuthority)
         {
             this.player = player;        
             InitCamera();
 
-            startingLane = network.IsSharedModeMasterClient ? firstStartLane : secondStartLane;
+            startingLane = network.IsServer ? firstStartLane : secondStartLane;
+            isLocal = true;
         }
         else
-            startingLane = network.IsSharedModeMasterClient ? secondStartLane : firstStartLane;
+        {
+            startingLane = network.IsServer ? secondStartLane : firstStartLane;
+            isLocal = false;
+        }
 
-        player.Init(inputDetector, worldGenerator, startingLane);
+        player.Init(worldGenerator, startingLane, isLocal);
 
-        gameStarter.AddReadyPlayer(player);
+        raceStarter.AddReadyPlayer(player);
 
     }
+
+    public void InitFinishLine(FinishLine finishLine)
+    {
+        finishLine.Init(raceFinish);
+    }
+
+
+
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
+        if (runner.IsServer)
+        {
+            int startLane;
+            
+            if (runner.ActivePlayers.Count() == 1)
+                startLane = firstStartLane;
+            else
+                startLane = secondStartLane;
+
+            playerFactory.CreatePlayer(network, worldGenerator, startLane,player);
+        }
+    }
+
+
+    #region unused network callbacks
+    public void OnConnectedToServer(NetworkRunner runner)
+    {
+    }
+
+    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+    {
+    }
+
+    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
+    {
+    }
+
+    public virtual void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+    }
+
+    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
+    {
+    }
+
+    public void OnDisconnectedFromServer(NetworkRunner runner)
+    {
+    }
+
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
+    {
+    }
+
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
+    {
+    }
+
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    {
+    }
+
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
+    {
+    }
+
+    public void OnSceneLoadDone(NetworkRunner runner)
+    {
+    }
+
+    public void OnSceneLoadStart(NetworkRunner runner)
+    {
+    }
+
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
+    {
+    }
+
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+    }
+
+    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
+    {
+    }
+    #endregion
 }

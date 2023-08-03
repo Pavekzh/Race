@@ -8,13 +8,15 @@ public class RaceStarter:NetworkBehaviour
     private bool isOpponentsScreenShown;
     private bool isLevelReady;
 
-    [Networked] private int StartersReady { get; set; }
+    private int StartersReady { get; set; }
 
     private MatchmakingUI matchmaking;
+    private Timer raceTimer;
 
-    public void Init(MatchmakingUI matchmaking,WorldGenerator worldGenerator)
+    public void Init(MatchmakingUI matchmaking,WorldGenerator worldGenerator,Timer raceTimer)
     {
         this.matchmaking = matchmaking;
+        this.raceTimer = raceTimer;
         matchmaking.OpponentsScreenShown += OpponentsScreenShown;
         worldGenerator.LevelGenerated += LevelGenerated;
     }
@@ -48,9 +50,13 @@ public class RaceStarter:NetworkBehaviour
     public void RPC_GameStarterReady()
     {
         StartersReady++;
+        if (Runner.IsServer)
+        {
+            raceTimer.StartTimer();
+            if (StartersReady == GameBootstrap.MaxPlayers)
+                RPC_StartGame();
+        }
 
-        if (StartersReady == GameBootstrap.MaxPlayers)
-            RPC_StartGame();
     }
 
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All, InvokeLocal = true)]

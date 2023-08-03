@@ -7,17 +7,13 @@ public class SwipeInputDetector : InputDetector
     [SerializeField] [Range(0, 1)] private float swipeTreshold = 0.05f;
     [SerializeField] private Button nitroButton;
 
-    public override event Action OnLeftInput;
-    public override event Action OnRightInput;
-    public override event Action OnNitroInput;
-
     private Vector2 touchStartPos;
     private Vector2 touchEndPos;
     private bool isSwipeHandled;
 
     private void Awake()
     {
-        nitroButton.onClick.AddListener(() => OnNitroInput?.Invoke());
+        nitroButton.onClick.AddListener(() => isNitroInput = true);
     }
 
     public void SetEnabled(bool enabled)
@@ -48,9 +44,10 @@ public class SwipeInputDetector : InputDetector
                     if(CheckSwipe(out isRighSwipe))
                     {
                         if (isRighSwipe)
-                            OnRightInput?.Invoke();
+                            isRightInput = true;
                         else
-                            OnLeftInput?.Invoke();
+                            isLeftInput = true;
+
                         isSwipeHandled = true;
                     }
 

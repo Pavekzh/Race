@@ -15,7 +15,7 @@ public class WorldGenerator:NetworkBehaviour
     }
 
     [Header("Sections")]
-    [SerializeField] private GameObject finishSection;
+    [SerializeField] private FinishLine finishSection;
     [SerializeField] private GameObject[] sections;
     [SerializeField] private int levelLength = 30;
     [SerializeField] private Vector3 startPoint = Vector3.zero;
@@ -42,11 +42,13 @@ public class WorldGenerator:NetworkBehaviour
 
     private Transform sectionsParent;
     private Transform obstacleParent;
+    private GameBootstrap gameBootstrap;
 
-    public void Init(Transform sectionsParent, Transform obstacleParent)
+    public void Init(Transform sectionsParent, Transform obstacleParent,GameBootstrap bootstrap)
     {
         this.sectionsParent = sectionsParent;
         this.obstacleParent = obstacleParent;
+        this.gameBootstrap = bootstrap;
 
         LanesXs = new float[placesInRow];
         laneXs = new float[placesInRow];
@@ -65,7 +67,7 @@ public class WorldGenerator:NetworkBehaviour
 
     public override void Spawned()
     {        
-        if (HasStateAuthority)
+        if (Runner.IsServer)
             RandomSeed = Random.Range(int.MinValue, int.MaxValue);
 
         Random.InitState(RandomSeed);
@@ -87,7 +89,9 @@ public class WorldGenerator:NetworkBehaviour
         }        
         levelRealLength = position.z - startPoint.z;
         
-        BuildSection(finishSection, ref position);
+        FinishLine finish = BuildSection(finishSection.gameObject, ref position).GetComponent<FinishLine>();
+        gameBootstrap.InitFinishLine(finish);
+
     }
 
     private int[] SelectSections()
@@ -99,7 +103,7 @@ public class WorldGenerator:NetworkBehaviour
         return result;
     }
 
-    private void BuildSection(GameObject section, ref Vector3 position)
+    private GameObject BuildSection(GameObject section, ref Vector3 position)
     {
         GameObject instance = Instantiate(section, position, Quaternion.identity, sectionsParent);
         Collider sectionCollider = instance.GetComponent<Collider>();
@@ -109,6 +113,8 @@ public class WorldGenerator:NetworkBehaviour
 
         float length = sectionCollider.bounds.size.z;
         position.z += length;
+
+        return instance;
     }
 
 
