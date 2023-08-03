@@ -5,21 +5,24 @@ using UnityEngine.UI;
 public class SwipeInputDetector : InputDetector
 {
     [SerializeField] [Range(0, 1)] private float swipeTreshold = 0.05f;
-    [SerializeField] private Button nitroButton;
 
     private Vector2 touchStartPos;
     private Vector2 touchEndPos;
     private bool isSwipeHandled;
 
-    private void Awake()
+    private InGameUI inGameUI;
+
+    public void Init(InGameUI inGameUI)
     {
-        nitroButton.onClick.AddListener(() => isNitroInput = true);
+        this.inGameUI = inGameUI;
+        this.inGameUI.NitroClick += () => isNitroInput = true;
     }
+
 
     public void SetEnabled(bool enabled)
     {
         this.enabled = enabled;
-        nitroButton.gameObject.SetActive(enabled);
+        inGameUI.SetEnabledNitroButton(enabled);
     }
 
     private void Update()

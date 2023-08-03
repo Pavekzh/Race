@@ -11,6 +11,13 @@ public class Timer:NetworkBehaviour
 
     private bool timerStarted = false;
 
+    private InGameUI inGameUI;
+
+    public void Init(InGameUI inGameUI)
+    {
+        this.inGameUI = inGameUI;
+    }
+
     public void StartTimer()
     {
         if (Runner.IsServer)
@@ -31,7 +38,7 @@ public class Timer:NetworkBehaviour
 
     private static void RaceTimeChanged(Changed<Timer> timer)
     {
-        //Debug.LogError(timer.Behaviour.RaceTime);
+        timer.Behaviour.inGameUI.UpdateTimer(timer.Behaviour.raceTime);
     }
 
 }

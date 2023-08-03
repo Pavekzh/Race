@@ -8,7 +8,7 @@ public class SwitchInputDetector : InputDetector
 
     private InputDetector selected;
 
-    private void Awake()
+    public override void Init()
     {
 #if UNITY_STANDALONE || UNITY_EDITOR
         selected = keyboardInput;

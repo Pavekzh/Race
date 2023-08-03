@@ -14,6 +14,7 @@ public class NitroOilState : BaseState
     {
         player.CC.SetMultipliedMaxSpeed(player.NitroSpeedMultiplier * player.SlowEffectMultiplier);
         player.CC.SetMultipliedAcceleration(player.NitroAccelerationMultiplier);
+        player.SetOilIndicator(true);
 
         slowTimer = player.StartCoroutine(SlowTimer());
         nitroTimer = player.StartCoroutine(NitroTimer());
@@ -25,6 +26,7 @@ public class NitroOilState : BaseState
     {
         player.CC.SetDefaultAcceleration();
         player.CC.SetDefaultMaxSpeed();
+        player.SetOilIndicator(false);
 
         if (slowTimer != null)
         {

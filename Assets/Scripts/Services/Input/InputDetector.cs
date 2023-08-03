@@ -10,6 +10,8 @@ public abstract class InputDetector : MonoBehaviour, INetworkRunnerCallbacks
     protected bool isLeftInput;
     protected bool isNitroInput;
 
+    public virtual void Init() { }
+
     public virtual void OnInput(NetworkRunner runner, NetworkInput input)
     {
         //handle

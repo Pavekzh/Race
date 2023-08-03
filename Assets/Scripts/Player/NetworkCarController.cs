@@ -15,27 +15,28 @@ public class NetworkCarController : NetworkTransform
     [SerializeField] private float maxSpeed = 2.0f;
     [SerializeField] private float rotationSpeed = 15.0f;
 
-    private float defaultMaxSpeed;
-    private float defaultAcceleration;
+    public float MaxSpeed { get => maxSpeed; }
+    public float DefaultMaxSpeed { get; private set; }
+    public float DefaultAcceleration { get; private set; }
 
     public void SetMultipliedAcceleration(float multiplier)
     {
-        acceleration = defaultAcceleration * multiplier;
+        acceleration = DefaultAcceleration * multiplier;
     }
 
     public void SetMultipliedMaxSpeed(float multiplier)
     {
-        maxSpeed = defaultMaxSpeed * multiplier;
+        maxSpeed = DefaultMaxSpeed * multiplier;
     }
 
     public void SetDefaultAcceleration()
     {
-        acceleration = defaultAcceleration;
+        acceleration = DefaultAcceleration;
     }
 
     public void SetDefaultMaxSpeed()
     {
-        maxSpeed = defaultMaxSpeed;
+        maxSpeed = DefaultMaxSpeed;
     }
 
     [Networked]
@@ -45,6 +46,14 @@ public class NetworkCarController : NetworkTransform
     [Networked]
     [HideInInspector]
     public Vector3 Velocity { get; set; }
+
+    public Vector3 HorizontalVelocity
+    {
+        get
+        {
+            return new Vector3(Velocity.x, 0, Velocity.z);
+        }
+    }
 
     /// <summary>
     /// Sets the default teleport interpolation velocity to be the CC's current velocity.
@@ -63,8 +72,8 @@ public class NetworkCarController : NetworkTransform
     protected override void Awake()
     {
         base.Awake();
-        defaultAcceleration = acceleration;
-        defaultMaxSpeed = maxSpeed;
+        DefaultAcceleration = acceleration;
+        DefaultMaxSpeed = maxSpeed;
         CacheController();
     }
 

@@ -12,6 +12,7 @@ public class OilState : BaseState
     {
         player.CC.SetMultipliedMaxSpeed(player.SlowEffectMultiplier);
         timer = player.StartCoroutine(Timer());
+        player.SetOilIndicator(true);
 
         Debug.Log("OilState state enter");
     }
@@ -19,6 +20,7 @@ public class OilState : BaseState
     public override void Exit()
     {
         player.CC.SetDefaultMaxSpeed();
+        player.SetOilIndicator(false);
 
         if (timer != null)
         {

@@ -1,5 +1,5 @@
-using UnityEngine;
 using Fusion;
+using UnityEngine;
 
 public class Player : NetworkBehaviour
 {    
@@ -26,6 +26,7 @@ public class Player : NetworkBehaviour
         set
         {
             nitro = Mathf.Clamp(value, 0, maxNitro);
+            UpdateNitrobar();
         }
     }
     public float NitroSpeedMultiplier { get => nitroSpeedMultiplier; }
@@ -42,13 +43,16 @@ public class Player : NetworkBehaviour
     public Rigidbody Rigidbody { get; private set; }
     public NetworkCarController CC { get; private set; }
     public WorldGenerator WorldGenerator { get; private set; }
+    private InGameUI PlayerUI;
 
-    public void Init(WorldGenerator worldGenerator,int lane,bool isLocal)
+    public void Init(WorldGenerator worldGenerator,int lane,bool isLocal, InGameUI playerUI = null)
     {
         this.CurrentLane = lane;
         this.WorldGenerator = worldGenerator;
         this.IsLocal = isLocal;
+        this.PlayerUI = playerUI;
 
+        UpdateNitrobar();
 
 
         Rigidbody = GetComponent<Rigidbody>();
@@ -91,7 +95,11 @@ public class Player : NetworkBehaviour
                 }
             }
 
+
             stateMachine.CurrentState.Move();
+
+            UpdateSpedometer();
+
         }
     }
 
@@ -103,4 +111,23 @@ public class Player : NetworkBehaviour
         }
     }
 
+    public void SetOilIndicator(bool value)
+    {
+        if (PlayerUI != null)
+            PlayerUI.SetOilIndicator(value);
+    }
+
+    public void UpdateNitrobar()
+    {
+        if (PlayerUI != null)
+            PlayerUI.UpdateNitro(nitro / maxNitro);
+    }
+
+    public void UpdateSpedometer()
+    {
+        if (PlayerUI != null)
+        {
+            PlayerUI.UpdateSpeed(CC.HorizontalVelocity.magnitude / CC.DefaultMaxSpeed);
+        }
+    }
 }
