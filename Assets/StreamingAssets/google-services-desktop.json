@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1076692841558",
+    "project_id": "race-6d766",
+    "storage_bucket": "race-6d766.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076692841558:android:a54ea8a4c5f56a659537f7",
+        "android_client_info": {
+          "package_name": "com.Zhukovin.Race"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076692841558-hc528gh7hbljkkeqj79jruvg5a63v5hg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALL0H-1-c-ZllPO3YRl7tPPPcsBNvFRBU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076692841558-hc528gh7hbljkkeqj79jruvg5a63v5hg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

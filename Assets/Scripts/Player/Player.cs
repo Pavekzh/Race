@@ -73,8 +73,6 @@ public class Player : NetworkBehaviour
         isRaceStarted = true;
     }
 
-    bool isDisplayed;
-
     public override void FixedUpdateNetwork()
     {
         if (isRaceStarted)

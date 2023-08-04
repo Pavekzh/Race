@@ -1,6 +1,5 @@
-﻿using System.Collections;
+﻿using Fusion;
 using UnityEngine;
-using Fusion;
 
 
 public class PlayerPosition : NetworkBehaviour
