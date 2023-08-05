@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using Firebase;
@@ -6,18 +7,25 @@ using Firebase.Auth;
 
 public class FirebaseAuthService : MonoBehaviour
 {
-    public FirebaseUser User { get; private set; }
+    public const string SilentEmailPrefsKey = "email";
+    public const string SilentPasswordPrefsKey = "password";
+    public const string FirstLoginPrefsKey = "wasLoggedIn";
+
+    private Action onLoggedIn;
+    private Action onLoginFailed;
 
     private Messenger messenger;
     private FirebaseInit firebaseInit;
+    private FirebaseAuth auth;
 
-    public void Init(Messenger messenger, FirebaseInit firebaseInit)
+    public void Init(Messenger messenger, FirebaseInit firebaseInit,FirebaseAuth auth)
     {
         this.messenger = messenger;
         this.firebaseInit = firebaseInit;
+        this.auth = auth;
     }
 
-    public void Login(string email, string password)
+    public void Login(string email, string password,Action onLoggedIn,Action onLoginFailed = null)
     {
         if (!firebaseInit.FirebaseReady)
         {
@@ -25,23 +33,27 @@ public class FirebaseAuthService : MonoBehaviour
             return;
         }
 
+        this.onLoggedIn = onLoggedIn;
+        this.onLoginFailed = onLoginFailed;
         StartCoroutine(DoLogin(email, password));
     }
 
-    public void Signup(string email, string username, string password, string repeatPassword)
+    public void Signup(string email, string username, string password, string repeatPassword,Action onLoggedIn)
     {
         if (!firebaseInit.FirebaseReady)
         {
             messenger.ShowMessage("Error!", "Database is not ready", true, MessageType.Error);
             return;
         }
+
+        this.onLoggedIn = onLoggedIn;
         StartCoroutine(DoSignUp(email, username, password, repeatPassword));
 
     }
 
     private IEnumerator DoLogin(string email, string password)
     {
-        Task<AuthResult> loginTask = firebaseInit.Auth.SignInWithEmailAndPasswordAsync(email, password);
+        Task<AuthResult> loginTask =auth.SignInWithEmailAndPasswordAsync(email, password);
 
         yield return new WaitUntil(() => loginTask.IsCompleted);
 
@@ -65,12 +77,16 @@ public class FirebaseAuthService : MonoBehaviour
                     messenger.ShowMessage("Error!", "Wrong Password or Email ", true, MessageType.Error);
                     break;
             }
+            onLoginFailed?.Invoke();
 
         }
         else
         {
-            User = loginTask.Result.User;
+            FirebaseUser User = loginTask.Result.User;
             messenger.ShowMessage("Succes", $"Welcome {User.DisplayName}", true, MessageType.Succes);
+
+            SuccesLogin(email, password);
+            onLoggedIn?.Invoke();
         }
     }
 
@@ -86,7 +102,7 @@ public class FirebaseAuthService : MonoBehaviour
         }
         else
         {
-            Task<AuthResult> registerTask = firebaseInit.Auth.CreateUserWithEmailAndPasswordAsync(email, password);
+            Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
 
             yield return new WaitUntil(predicate: () => registerTask.IsCompleted);
 
@@ -114,7 +130,7 @@ public class FirebaseAuthService : MonoBehaviour
             }
             else
             {
-                User = registerTask.Result.User;
+                FirebaseUser User = registerTask.Result.User;
 
                 if (User != null)
                 {
@@ -133,8 +149,18 @@ public class FirebaseAuthService : MonoBehaviour
                     }
 
                     messenger.ShowMessage("Succes!", $"You`re succesefully created account. Welcome {User.DisplayName}",true,MessageType.Succes);
+
+                    SuccesLogin(email, password);
+                    onLoggedIn();
                 }
             }
         }
+    }
+
+    private void SuccesLogin(string email, string password)
+    {
+        PlayerPrefs.SetInt(FirstLoginPrefsKey, 1);
+        PlayerPrefs.SetString(SilentEmailPrefsKey, email);
+        PlayerPrefs.SetString(SilentPasswordPrefsKey, password);
     }
 }

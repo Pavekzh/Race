@@ -13,12 +13,15 @@ public class SignupUI:UIPanel
     [SerializeField] private Button signup;
 
     private LoginUI loginUI;
-    private FirebaseAuthService firebaseAuth;
+    private FirebaseAuthService authService;
+    private SceneLoader sceneLoader;
 
-    public void Init(LoginUI loginUI, FirebaseAuthService firebaseAuth)
+
+    public void Init(LoginUI loginUI, FirebaseAuthService firebaseAuth, SceneLoader sceneLoader)
     {
         this.loginUI = loginUI;
-        this.firebaseAuth = firebaseAuth;
+        this.authService = firebaseAuth;
+        this.sceneLoader = sceneLoader;
 
         this.signup.onClick.AddListener(Signup);
         this.login.onClick.AddListener(Login);
@@ -26,11 +29,17 @@ public class SignupUI:UIPanel
 
     private void Login()
     {
+        this.Close();
         loginUI.Open();
     }
 
     private void Signup()
     {
-        firebaseAuth.Signup(email.text, username.text, password.text, repeatPassword.text);
+        authService.Signup(email.text, username.text, password.text, repeatPassword.text,LoggedIn);
+    }
+
+    private void LoggedIn()
+    {
+        sceneLoader.LoadMenu();
     }
 }

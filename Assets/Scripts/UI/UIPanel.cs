@@ -5,13 +5,17 @@ public  abstract class UIPanel : MonoBehaviour
 {
     [SerializeField] private RectTransform panel;
 
+    private bool isOpen => panel.gameObject.activeSelf;
+
     public virtual void Open()
     {
-        panel.gameObject.SetActive(true);
+        if(!isOpen)
+            panel.gameObject.SetActive(true);
     }
 
     public virtual void Close()
     {
-        panel.gameObject.SetActive(false);
+        if(isOpen)
+            panel.gameObject.SetActive(false);
     }
 }

@@ -1,14 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using Firebase;
+using Firebase.Database;
 using Firebase.Auth;
 using System.Threading.Tasks;
 
 public class FirebaseInit : MonoBehaviour
 {
-    public FirebaseApp App { get; private set; }
-    public FirebaseAuth Auth { get; private set; }
-
     public bool FirebaseReady { get; set; } = false;
 
     public async Task Init()
@@ -19,8 +17,6 @@ public class FirebaseInit : MonoBehaviour
 
             if (dependencyStatus == DependencyStatus.Available)
             {
-                App = FirebaseApp.DefaultInstance;
-                Auth = FirebaseAuth.DefaultInstance; 
                 FirebaseReady = true;
                 Debug.Log("Firebase ready");
             }

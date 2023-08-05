@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1076692841558",
+    "firebase_url": "https://race-6d766-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "race-6d766",
     "storage_bucket": "race-6d766.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1076692841558-p9b7qes0fgbr9l2o3bi0o61qgmsdf01f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Zhukovin.Race",
+            "certificate_hash": "c21735fb3d45715e25dfdb966d6a66277dbeaa39"
+          }
+        },
         {
           "client_id": "1076692841558-hc528gh7hbljkkeqj79jruvg5a63v5hg.apps.googleusercontent.com",
           "client_type": 3

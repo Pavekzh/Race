@@ -488,6 +488,53 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &431684468
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 431684470}
+  - component: {fileID: 431684469}
+  m_Layer: 0
+  m_Name: SceneLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &431684469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431684468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bace57aef34f5d449db20b2371e7c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuScene: 1
+  gameScene: 2
+  loginScene: 0
+--- !u!4 &431684470
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431684468}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 569.6662, y: 258.6809, z: 2.9763794}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &490691793
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +551,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &490691794
 RectTransform:
   m_ObjectHideFlags: 0
@@ -753,7 +800,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c075114e50a1e084cb6d6fdf68a6f5dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firebaseAuth: {fileID: 344262706}
+  sceneLoader: {fileID: 431684469}
+  authService: {fileID: 344262706}
   firebaseInit: {fileID: 344262707}
   messenger: {fileID: 2611725119207938402}
   loginUI: {fileID: 79724568}
@@ -802,7 +850,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &725455815
 PrefabInstance:
@@ -1157,7 +1205,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1206404893 stripped
 MonoBehaviour:
@@ -1403,7 +1451,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &1251383254
 MonoBehaviour:
@@ -1507,7 +1555,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1465866958
 PrefabInstance:
@@ -1930,7 +1978,7 @@ PrefabInstance:
     - target: {fileID: 6603040945755322827, guid: 2b4ff2e4250d72c489a816e324e703fa,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b4ff2e4250d72c489a816e324e703fa, type: 3}
@@ -2295,7 +2343,7 @@ RectTransform:
   - {fileID: 79724567}
   - {fileID: 490691794}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2611,7 +2659,7 @@ PrefabInstance:
     - target: {fileID: 2611725120082040973, guid: 0f940e86c0631774284966a3cb9cc8ca,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2611725120082040973, guid: 0f940e86c0631774284966a3cb9cc8ca,
         type: 3}
