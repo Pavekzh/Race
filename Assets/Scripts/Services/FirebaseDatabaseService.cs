@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Firebase.Auth;
+using Firebase.Database;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using Firebase;
-using Firebase.Database;
-using Firebase.Auth;
 
 public class FirebaseDatabaseService : MonoBehaviour
 {    
     private const string UsersRoot = "UsersData";
     private const string UserName = "username";
     private const string UserAvatar = "avatar";
+    private const string UserCar = "car";
     private const string UserBestTime = "bestTime";
 
 
@@ -23,9 +23,12 @@ public class FirebaseDatabaseService : MonoBehaviour
 
     //result callbacks
     private Action<UserData> getUserDataResult;
-    private Action<int> getAvatarResult;    
+    private Action<int> getAvatarResult;
+    private Action<int> getCarResult;
     private Action<float> getBestTimeResult;
     private Action<IEnumerable<UserData>,int> getLeaderboardResult;
+
+    private Action setSelectedCarSucceed;
 
     //dependencies
     private Messenger messenger;
@@ -58,6 +61,17 @@ public class FirebaseDatabaseService : MonoBehaviour
         return userData.Username;
     }
 
+    public void GetSelectedCar(Action<int> OnResult)
+    {
+        if (!userDataLoaded)
+        {
+            this.getCarResult += OnResult;
+            StartCoroutine(LoadUserData());
+        }
+        else
+            OnResult(userData.SelectedCar);
+    }
+
     public void GetBestTime(Action<float> OnResult)
     {
         if (!userDataLoaded)
@@ -87,6 +101,7 @@ public class FirebaseDatabaseService : MonoBehaviour
         StartCoroutine(LoadLeaderboard(numberOfFirst));
     }
 
+
     public void UpdateBestTime(float bestTime)
     {
         StartCoroutine(UploadBestTime(bestTime));
@@ -102,6 +117,32 @@ public class FirebaseDatabaseService : MonoBehaviour
         StartCoroutine(UploadAvatar(avatar));
     }
 
+    public void UpdateCar(int car,Action onSucceed = null)
+    {
+        if (onSucceed != null)
+            setSelectedCarSucceed += onSucceed;
+
+        StartCoroutine(UploadSelectedCar(car));
+    }
+
+
+    private IEnumerator UploadSelectedCar(int car)
+    {
+        Task uploadTask = database.RootReference.Child(UsersRoot).Child(auth.CurrentUser.UserId).Child(UserCar).SetValueAsync(car);
+        yield return new WaitUntil(() => uploadTask.IsCompleted);
+
+        if (uploadTask.Exception != null)
+        {
+            messenger.ShowMessage("Error!", "Updating best time failed", true, MessageType.Error);
+        }
+        else
+        {
+            userData.BestTime = car;
+
+            setSelectedCarSucceed?.Invoke();
+            setSelectedCarSucceed = null;
+        }
+    }
 
     private IEnumerator UploadBestTime(float bestTime)
     {
@@ -171,6 +212,8 @@ public class FirebaseDatabaseService : MonoBehaviour
                 userData.Avatar = int.Parse(data.Child(UserAvatar).Value.ToString());
             if (data.Child(UserBestTime).Value != null)
                 userData.BestTime = float.Parse(data.Child(UserBestTime).Value.ToString());
+            if (data.Child(UserCar).Value != null)
+                userData.SelectedCar = int.Parse(data.Child(UserCar).Value.ToString());
         }
 
         userDataLoading = false;
@@ -178,8 +221,11 @@ public class FirebaseDatabaseService : MonoBehaviour
 
         getAvatarResult?.Invoke(userData.Avatar);
         getBestTimeResult?.Invoke(userData.BestTime);
+        getCarResult?.Invoke(userData.SelectedCar);
         getUserDataResult?.Invoke(userData);
-        getUserDataResult = null;
+
+        getUserDataResult = null;        
+        getCarResult = null;
         getBestTimeResult = null;
         getAvatarResult = null;
     }

@@ -28,7 +28,7 @@ public class MenuBootstrap : MonoBehaviour
 
     private void InitMainMenuUI()
     {
-        mainMenuUI.Init(sceneLoader);
+        mainMenuUI.Init(sceneLoader,databaseService);
     }
 
     private void InitUserProfileUI()
