@@ -10,6 +10,7 @@ public class MenuBootstrap : MonoBehaviour
     [SerializeField] private Messenger messenger;
     [SerializeField] private MainMenuUI mainMenuUI;
     [SerializeField] private UserProfileUI userProfileUI;
+    [SerializeField] private Leaderboard leaderboard;
 
 
     private void Awake()
@@ -17,6 +18,12 @@ public class MenuBootstrap : MonoBehaviour
         InitDatabaseService();
         InitMainMenuUI();
         InitUserProfileUI();
+        InitLeaderboard();
+    }
+
+    private void InitLeaderboard()
+    {
+        leaderboard.Init(databaseService,userAvatars);
     }
 
     private void InitMainMenuUI()

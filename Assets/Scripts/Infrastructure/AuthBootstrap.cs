@@ -4,8 +4,9 @@ public class AuthBootstrap : MonoBehaviour
 {
     [Header("Systems")]
     [SerializeField] private SceneLoader sceneLoader;
-    [SerializeField] private FirebaseAuthService authService;
     [SerializeField] private FirebaseInit firebaseInit;
+    [SerializeField] private FirebaseDatabaseService databaseService;    
+    [SerializeField] private FirebaseAuthService authService;
     [Header("UI")]
     [SerializeField] private Messenger messenger;
     [SerializeField] private LoginUI loginUI;
@@ -22,7 +23,7 @@ public class AuthBootstrap : MonoBehaviour
 
     private void InitFirebaseAuth()
     {
-        authService.Init(messenger, firebaseInit,Firebase.Auth.FirebaseAuth.DefaultInstance);
+        authService.Init(messenger, firebaseInit,Firebase.Auth.FirebaseAuth.DefaultInstance,databaseService);
     }
 
     private void InitLoginUI()

@@ -17,12 +17,14 @@ public class FirebaseAuthService : MonoBehaviour
     private Messenger messenger;
     private FirebaseInit firebaseInit;
     private FirebaseAuth auth;
+    private FirebaseDatabaseService databaseService;
 
-    public void Init(Messenger messenger, FirebaseInit firebaseInit,FirebaseAuth auth)
+    public void Init(Messenger messenger, FirebaseInit firebaseInit,FirebaseAuth auth,FirebaseDatabaseService databaseService)
     {
         this.messenger = messenger;
         this.firebaseInit = firebaseInit;
         this.auth = auth;
+        this.databaseService = databaseService;
     }
 
     public void Login(string email, string password,Action onLoggedIn,Action onLoginFailed = null)
@@ -150,6 +152,7 @@ public class FirebaseAuthService : MonoBehaviour
 
                     messenger.ShowMessage("Succes!", $"You`re succesefully created account. Welcome {User.DisplayName}",true,MessageType.Succes);
 
+                    databaseService.UpdateUsername(username);
                     SuccesLogin(email, password);
                     onLoggedIn();
                 }
