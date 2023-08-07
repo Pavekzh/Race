@@ -36,7 +36,7 @@ public class Player : NetworkBehaviour
     public float SlowEffectMultiplier { get; set; }
 
 
-    private bool isRaceStarted;
+    private bool isRaceGoing;
 
     private StateMachine<BaseState> stateMachine;
 
@@ -70,12 +70,17 @@ public class Player : NetworkBehaviour
 
     public void StartRace()
     {
-        isRaceStarted = true;
+        isRaceGoing = true;
+    }
+
+    public void StopRace()
+    {
+        isRaceGoing = false;
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (isRaceStarted)
+        if (isRaceGoing)
         {
             if (HasStateAuthority)
             {
@@ -103,7 +108,7 @@ public class Player : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isRaceStarted && HasStateAuthority)
+        if (isRaceGoing && HasStateAuthority)
         {
             stateMachine.CurrentState.Trigger(other);
         }

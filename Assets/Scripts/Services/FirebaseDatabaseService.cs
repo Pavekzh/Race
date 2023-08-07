@@ -28,6 +28,7 @@ public class FirebaseDatabaseService : MonoBehaviour
     private Action<float> getBestTimeResult;
     private Action<IEnumerable<UserData>,int> getLeaderboardResult;
 
+    private Action setBestTimeSucceed;
     private Action setSelectedCarSucceed;
 
     //dependencies
@@ -102,8 +103,11 @@ public class FirebaseDatabaseService : MonoBehaviour
     }
 
 
-    public void UpdateBestTime(float bestTime)
+    public void UpdateBestTime(float bestTime,Action onSucceed = null)
     {
+        if (onSucceed != null)
+            setBestTimeSucceed += onSucceed;
+
         StartCoroutine(UploadBestTime(bestTime));
     }
 
@@ -154,7 +158,12 @@ public class FirebaseDatabaseService : MonoBehaviour
             messenger.ShowMessage("Error!", "Updating best time failed", true, MessageType.Error);
         }
         else
+        {
             userData.BestTime = bestTime;
+            setBestTimeSucceed?.Invoke();
+            setBestTimeSucceed = null;
+        }
+
     }
 
     private IEnumerator UploadAvatar(int avatar)

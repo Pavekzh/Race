@@ -27,11 +27,12 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
     [SerializeField] private RaceStarter raceStarter;
     [SerializeField] private RaceFinish raceFinish;
     [SerializeField] private Timer raceTimer;
-
     [SerializeField] private WorldGenerator worldGenerator;
+    [SerializeField] private SceneLoader sceneLoader;
     [Header("UI")]
     [SerializeField] private MatchmakingUI matchmakingUI;
     [SerializeField] private InGameUI inGameUI;
+    [SerializeField] private RaceFinishUI raceFinishUI;
 
     private Player player;
 
@@ -49,7 +50,10 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
 
         Instance = this;
 
+        InitDatabase();
+        InitPlayerFactory();
         InitMatchMakingUI();
+        InitRaceFinishUI();
         InitTimer();
         InitPlayerPosition();
         InitRaceStarter();
@@ -73,10 +77,25 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
         };
         await network.StartGame(args);
     }  
+
+    private void InitPlayerFactory()
+    {
+        playerFactory.Init(network, worldGenerator, databaseService);
+    }
     
+    private void InitDatabase()
+    {
+        databaseService.Init(Firebase.Database.FirebaseDatabase.DefaultInstance, Firebase.Auth.FirebaseAuth.DefaultInstance);
+    }
+
     private void InitMatchMakingUI()
     {
         matchmakingUI.Init(databaseService, userAvatars);
+    }
+
+    private void InitRaceFinishUI()
+    {
+        raceFinishUI.Init(databaseService, sceneLoader);
     }
 
     private void InitTimer()
@@ -96,7 +115,7 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
 
     private void InitRaceFinish()
     {
-        raceFinish.Init(raceTimer);
+        raceFinish.Init(raceTimer,raceFinishUI);
     }
     
     private void InitLevel()
@@ -161,15 +180,12 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
     {
         if (runner.IsServer)
         {
-            int startLane;
-            
             if (runner.ActivePlayers.Count() == 1)
-                startLane = firstStartLane;
+                playerFactory.CreatePlayerCar(true, player);
             else
-                startLane = secondStartLane;
-
-            playerFactory.CreatePlayer(network, worldGenerator, startLane,player);
+                playerFactory.CreatePlayerCar(false, player);
         }
+
     }
 
     #region unused network callbacks

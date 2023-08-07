@@ -23,6 +23,7 @@ public class AuthBootstrap : MonoBehaviour
 
     private void InitFirebaseAuth()
     {
+        databaseService.Init(Firebase.Database.FirebaseDatabase.DefaultInstance, Firebase.Auth.FirebaseAuth.DefaultInstance);
         authService.Init(messenger, firebaseInit,Firebase.Auth.FirebaseAuth.DefaultInstance,databaseService);
     }
 

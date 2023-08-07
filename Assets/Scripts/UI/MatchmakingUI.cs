@@ -45,7 +45,11 @@ public class MatchmakingUI:NetworkBehaviour
         }
         else if(playerJoined == 2)
         {
-            RPC_SendUserDataToOpponent(selfData.Username,selfData.Avatar);
+            if (!Runner.IsServer)
+            {
+                RPC_SendUserDataToOpponent(selfData.Username, selfData.Avatar);
+                RPC_RequestUserData();
+            }
             StartCoroutine(ShowOpponentsScreen());
         }        
 
@@ -67,6 +71,12 @@ public class MatchmakingUI:NetworkBehaviour
         avatarSelf.sprite = userAvatars.GetAvatar(data.Avatar);
         usernameSelf.text = data.Username;
         selfData = data;
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority, InvokeLocal = false)]
+    private void RPC_RequestUserData()
+    {
+        RPC_SendUserDataToOpponent(selfData.Username, selfData.Avatar);
     }
 
     [Rpc(sources: RpcSources.All,targets: RpcTargets.All,InvokeLocal = false)]

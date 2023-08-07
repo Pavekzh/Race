@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using Fusion;
-using System;
+﻿using Fusion;
 
 public class RaceFinish:NetworkBehaviour
 {
@@ -8,16 +6,20 @@ public class RaceFinish:NetworkBehaviour
     [Networked] private float RemoteFinishTime { get; set; }
 
     private Timer raceTimer;
+    private RaceFinishUI raceFinishUI;
 
-    public void Init(Timer raceTimer)
+    public void Init(Timer raceTimer,RaceFinishUI raceFinishUI)
     {
         this.raceTimer = raceTimer;
+        this.raceFinishUI = raceFinishUI;
     }
 
     public void RegisterFinish(Player player)
-    {
+    {           
+        player.StopRace();
         if (Runner.IsServer)
         {
+
             if(player.IsLocal && HostFinishTime == 0)
             {
                 HostFinishTime = raceTimer.RaceTime;
@@ -56,12 +58,12 @@ public class RaceFinish:NetworkBehaviour
     private void Win()
     {
         float time = Runner.IsServer ? HostFinishTime : RemoteFinishTime;
-        Debug.LogError("Win: "+time);
+        raceFinishUI.ShowUI(true, time / 60);
     }
 
     private void Lose()
     {
         float time = Runner.IsServer ? HostFinishTime : RemoteFinishTime;
-        Debug.LogError("Lose: "+time);
+        raceFinishUI.ShowUI(false, time / 60);
     }
 }
