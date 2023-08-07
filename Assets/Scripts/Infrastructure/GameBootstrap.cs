@@ -16,10 +16,12 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
     [SerializeField] private PlayerPosition playerPosition;
     [SerializeField] private InputDetector inputDetector;
     [SerializeField] private SwipeInputDetector swipeInputDetector;
+    [SerializeField] private UserAvatars userAvatars;
     [Header("Network")]
     [SerializeField] private NetworkRunner network;
     [SerializeField] private NetworkSceneManagerDefault sceneManager;
     [Header("Services")]
+    [SerializeField] private FirebaseDatabaseService databaseService;
     [SerializeField] private Transform sectionsParent;
     [SerializeField] private Transform obstaclesParent;
     [SerializeField] private RaceStarter raceStarter;
@@ -74,7 +76,7 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
     
     private void InitMatchMakingUI()
     {
-        matchmakingUI.Init();
+        matchmakingUI.Init(databaseService, userAvatars);
     }
 
     private void InitTimer()

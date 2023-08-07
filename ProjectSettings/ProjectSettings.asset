@@ -245,13 +245,13 @@ PlayerSettings:
   useCustomMainGradleTemplate: 0
   useCustomLauncherGradleManifest: 0
   useCustomBaseGradleTemplate: 0
-  useCustomGradlePropertiesTemplate: 0
+  useCustomGradlePropertiesTemplate: 1
   useCustomProguardFile: 0
   AndroidTargetArchitectures: 3
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/38095/OneDrive/Documents/GravityBuilds/Keys/GravityKeystore.keystore
+  AndroidKeystoreName: C:/Users/38095/OneDrive/Documents/Keys/GravityKeystore.keystore
   AndroidKeyaliasName: racekey
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0

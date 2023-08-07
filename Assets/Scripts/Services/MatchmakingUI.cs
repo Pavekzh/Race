@@ -2,8 +2,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Fusion;
 
-public class MatchmakingUI:MonoBehaviour
+public class MatchmakingUI:NetworkBehaviour
 {
     [SerializeField] private GameObject searchingScreen;
     [SerializeField] private GameObject opponentsScreen;
@@ -13,12 +14,19 @@ public class MatchmakingUI:MonoBehaviour
     [SerializeField] private Image avatarOpponent;
     [SerializeField] private TMP_Text usernameOpponent;
 
-    private int players = 0;
+    private UserData selfData;
+    private int playerJoined = 0;
+    private bool opponentDataLoaded = false;
 
     public event System.Action OpponentsScreenShown;
 
-    public void Init()
+    private UserAvatars userAvatars;
+
+    public void Init(FirebaseDatabaseService databaseService,UserAvatars userAvatars)
     {
+        this.userAvatars = userAvatars;
+
+        databaseService.GetUserData(SetSelfData);
         searchingScreen.SetActive(true);
     }
 
@@ -30,18 +38,14 @@ public class MatchmakingUI:MonoBehaviour
 
     public void PlayerJoined()
     {
-        players++;
-        if(players == 1)
+        playerJoined++;
+        if(playerJoined == 1)
         {
-            Debug.LogWarning("Player data should be loaded from database");
-            avatarSelf.color = Color.green;
-            usernameSelf.text = "Player1";
+
         }
-        else if(players == 2)
-        {            
-            Debug.LogWarning("Opponent player data should be loaded from database");
-            avatarOpponent.color = Color.red;
-            usernameOpponent.text = "Player2";
+        else if(playerJoined == 2)
+        {
+            RPC_SendUserDataToOpponent(selfData.Username,selfData.Avatar);
             StartCoroutine(ShowOpponentsScreen());
         }        
 
@@ -51,7 +55,25 @@ public class MatchmakingUI:MonoBehaviour
     {
         searchingScreen.SetActive(false);
         opponentsScreen.SetActive(true);
+
+        yield return new WaitUntil(() => opponentDataLoaded);
+
         yield return new WaitForSeconds(showOpponentsScreenTime);
         OpponentsScreenShown?.Invoke();
+    }
+
+    private void SetSelfData(UserData data)
+    {
+        avatarSelf.sprite = userAvatars.GetAvatar(data.Avatar);
+        usernameSelf.text = data.Username;
+        selfData = data;
+    }
+
+    [Rpc(sources: RpcSources.All,targets: RpcTargets.All,InvokeLocal = false)]
+    private void RPC_SendUserDataToOpponent(string username, int avatar)
+    {
+        avatarOpponent.sprite = userAvatars.GetAvatar(avatar);
+        usernameOpponent.text = username;
+        opponentDataLoaded = true;
     }
 }
