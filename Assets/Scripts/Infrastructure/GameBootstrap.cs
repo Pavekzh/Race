@@ -115,6 +115,7 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
 
     private void InitRaceFinish()
     {
+        network.AddCallbacks(raceFinish);
         raceFinish.Init(raceTimer,raceFinishUI);
     }
     
@@ -183,7 +184,10 @@ public class GameBootstrap : MonoBehaviour,INetworkRunnerCallbacks
             if (runner.ActivePlayers.Count() == 1)
                 playerFactory.CreatePlayerCar(true, player);
             else
+            {
                 playerFactory.CreatePlayerCar(false, player);
+                runner.SessionInfo.IsOpen = false;
+            }
         }
 
     }

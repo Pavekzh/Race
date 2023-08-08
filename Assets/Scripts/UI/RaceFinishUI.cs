@@ -25,10 +25,25 @@ public class RaceFinishUI : MonoBehaviour
         databaseService.GetBestTime(best => bestTime = best);
 
         panel.gameObject.SetActive(false);
-        quit.onClick.AddListener(() => StartCoroutine(Quit()));       
-
+        quit.onClick.AddListener(() => StartCoroutine(Quit()));
+        quit.interactable = false;
     }
 
+    /// <summary>
+    /// Open race finish message DNF
+    /// </summary>
+    public void ShowUI(bool isWin)
+    {
+        panel.gameObject.SetActive(true);
+        isTimeSaved = true;
+
+        state.text = isWin ? "You Win" : "Game over";
+        time.text = "DNF";
+    }
+
+    /// <summary>
+    /// Open rce finish massage with finish time
+    /// </summary>
     public void ShowUI(bool isWin, float timeInMinutes)
     {
         panel.gameObject.SetActive(true);
@@ -40,6 +55,11 @@ public class RaceFinishUI : MonoBehaviour
 
         state.text = isWin ? "You Win" : "Game over";
         time.text = new DateTime().AddMinutes(timeInMinutes).ToString("m:ss.ff");
+    }
+
+    public void UnlockQuit()
+    {
+        quit.interactable = true;
     }
 
     private IEnumerator Quit()

@@ -2451,6 +2451,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button
       objectReference: {fileID: 0}
+    - target: {fileID: 9201081910586008165, guid: 0ea32ebff8a67474985dacd96cffbfcf,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9201081910586008165, guid: 0ea32ebff8a67474985dacd96cffbfcf,
+        type: 3}
+      propertyPath: m_Colors.m_DisabledColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9201081910586008165, guid: 0ea32ebff8a67474985dacd96cffbfcf,
+        type: 3}
+      propertyPath: m_Colors.m_DisabledColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9201081910586008165, guid: 0ea32ebff8a67474985dacd96cffbfcf,
+        type: 3}
+      propertyPath: m_Colors.m_DisabledColor.r
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ea32ebff8a67474985dacd96cffbfcf, type: 3}
 --- !u!114 &1029230947 stripped
