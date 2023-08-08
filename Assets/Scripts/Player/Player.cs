@@ -116,14 +116,15 @@ public class Player : NetworkBehaviour
 
     public void SetOilIndicator(bool value)
     {
-        if (PlayerUI != null)
-            PlayerUI.SetOilIndicator(value);
+        if (Runner.IsServer)
+            RPC_SetOilIndicator(value);
+
     }
 
     public void UpdateNitrobar()
     {
-        if (PlayerUI != null)
-            PlayerUI.UpdateNitro(nitro / maxNitro);
+        if (Runner.IsServer)
+            RPC_UpdateNitrobar(nitro);
     }
 
     public void UpdateSpedometer()
@@ -133,4 +134,19 @@ public class Player : NetworkBehaviour
             PlayerUI.UpdateSpeed(CC.HorizontalVelocity.magnitude / CC.DefaultMaxSpeed);
         }
     }
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+    private void RPC_SetOilIndicator(bool value)
+    {
+        if (PlayerUI != null)
+            PlayerUI.SetOilIndicator(value);
+    }
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+    private void RPC_UpdateNitrobar(float nitro)
+    {
+        if (PlayerUI != null)
+            PlayerUI.UpdateNitro(nitro / maxNitro);
+    }
+
 }

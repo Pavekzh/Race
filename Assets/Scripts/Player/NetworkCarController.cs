@@ -156,7 +156,8 @@ public class NetworkCarController : NetworkTransform
 
         Controller.Move(moveVelocity * deltaTime);
 
-        Velocity = (transform.position - previousPos) * Runner.Simulation.Config.TickRate;
+        if(Runner.IsServer)
+            Velocity = (transform.position - previousPos) * Runner.Simulation.Config.TickRate;
         IsGrounded = Controller.isGrounded;
     }
 
