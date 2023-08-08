@@ -3,9 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    [SerializeField] private int menuScene = 0;    
-    [SerializeField] private int gameScene = 1;
-    [SerializeField] private int loginScene = 2;
+    [SerializeField] private int loginScene = 0;
+    [SerializeField] private int menuScene = 1;
+    [SerializeField] private int gameScene = 2;
+    [SerializeField] private int garageScene = 3;
 
     public void LoadMenu()
     {
@@ -20,5 +21,10 @@ public class SceneLoader : MonoBehaviour
     public void LoadLogin()
     {
         SceneManager.LoadSceneAsync(loginScene);
+    }
+
+    public void LoadGarage()
+    {
+        SceneManager.LoadSceneAsync(garageScene);
     }
 }

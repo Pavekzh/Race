@@ -3,7 +3,7 @@
     "TypeId": "NetworkProjectConfig",
     "PeerMode": 0,
     "PhysicsEngine": 0,
-    "ServerPhysicsMode": 0,
+    "ServerPhysicsMode": 1,
     "UseLagCompensation": true,
     "LagCompensation": {
         "HitboxBufferSize": 12,
@@ -38,7 +38,7 @@
     "NetworkIdIsObjectName": false,
     "HideNetworkObjectInactivityGuard": false,
     "EnableHostMigration": false,
-    "HostMigrationSnapshotInterval": 60,
+    "HostMigrationSnapshotInterval": 30,
     "Simulation": {
         "InputDataWordCount": 0,
         "TickRate": 60,
@@ -135,8 +135,8 @@
                 "_hash": -814817977
             },
             {
-                "_value": 0.0010000000474974514,
-                "_inverse": 999.9999389648438,
+                "_value": 0.00009999999747378752,
+                "_inverse": 10000.0,
                 "_hash": -194233199
             },
             {
