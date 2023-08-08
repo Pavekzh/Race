@@ -7,9 +7,7 @@ using Firebase.Auth;
 
 public class FirebaseAuthService : MonoBehaviour
 {
-    public const string SilentEmailPrefsKey = "email";
-    public const string SilentPasswordPrefsKey = "password";
-    public const string FirstLoginPrefsKey = "wasLoggedIn";
+    public bool IsLoggedIn { get => auth.CurrentUser != null; }
 
     private Action onLoggedIn;
     private Action onLoginFailed;
@@ -25,6 +23,11 @@ public class FirebaseAuthService : MonoBehaviour
         this.firebaseInit = firebaseInit;
         this.auth = auth;
         this.databaseService = databaseService;
+    }
+
+    public void LogOut()
+    {
+        auth.SignOut();
     }
 
     public void Login(string email, string password,Action onLoggedIn,Action onLoginFailed = null)
@@ -162,8 +165,6 @@ public class FirebaseAuthService : MonoBehaviour
 
     private void SuccesLogin(string email, string password)
     {
-        PlayerPrefs.SetInt(FirstLoginPrefsKey, 1);
-        PlayerPrefs.SetString(SilentEmailPrefsKey, email);
-        PlayerPrefs.SetString(SilentPasswordPrefsKey, password);
+
     }
 }

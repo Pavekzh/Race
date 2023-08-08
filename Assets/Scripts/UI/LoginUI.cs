@@ -10,6 +10,7 @@ public class LoginUI:UIPanel
     [SerializeField] private Button login;
     [SerializeField] private Button signup;
 
+    private const string FirstLoginPrefsKey = "wasLoggedIn";
 
     private SignupUI signupUI;
     private FirebaseAuthService authService;
@@ -23,24 +24,24 @@ public class LoginUI:UIPanel
         this.sceneLoader = sceneLoader;
         this.messenger = messenger;
 
+
         InitButtons();
-        TrySilentLogin(signupUI, messenger);
+        SelectLoginMethod(signupUI, messenger);
     }
 
-    private void TrySilentLogin(SignupUI signupUI, Messenger messenger)
+    private void SelectLoginMethod(SignupUI signupUI, Messenger messenger)
     {
-        string savedEmail = PlayerPrefs.GetString(FirebaseAuthService.SilentEmailPrefsKey, "");
-        string savedPassword = PlayerPrefs.GetString(FirebaseAuthService.SilentPasswordPrefsKey, "");
-        bool firstLogin = PlayerPrefs.GetInt(FirebaseAuthService.FirstLoginPrefsKey) == 0;
+        bool firstLogin = PlayerPrefs.GetInt(FirstLoginPrefsKey) == 0;
 
-        if (firstLogin)
+        if (authService.IsLoggedIn)
+        {
+            LoggedIn();
+            if (firstLogin)
+                PlayerPrefs.SetInt(FirstLoginPrefsKey, 1);
+        }
+        else if (firstLogin)
         {
             signupUI.Open();
-        }
-        else if (savedEmail != "" && savedPassword != "")
-        {
-            messenger.ShowMessage("", "Login...", false);
-            authService.Login(savedEmail, savedPassword, LoggedIn, LoginFailed);
         }
         else
         {
@@ -73,6 +74,7 @@ public class LoginUI:UIPanel
 
     private void LoggedIn()
     {
+        messenger.ShowMessage("", "Login...", false);
         sceneLoader.LoadMenu();
     }
 }

@@ -256,21 +256,31 @@ public class FirebaseDatabaseService : MonoBehaviour
             List<UserData> leaderboard = new List<UserData>();
             int userPosition = -1;
 
-            int index = 0;
+            int validUserRecords = 0;
+
             foreach(DataSnapshot userSnapshot in data.Children)
             {
-                if (userPosition != -1 && index > 9)
+                if (userPosition != -1 && validUserRecords > 9)
                     break;
 
-                if (index < numberOfFirst)
+                bool timeValid = false;
+                float bestTime = 0;
+
+                if (userSnapshot.Child(UserBestTime).Value != null)
+                    bestTime = float.Parse(userSnapshot.Child(UserBestTime).Value.ToString());
+
+                if(bestTime != 0)
+                {
+                    timeValid = true;
+                    validUserRecords++;
+                }
+
+                if (validUserRecords < numberOfFirst && timeValid)
                 {
 
                     string username = userSnapshot.Child(UserName).Value.ToString();
                     int avatar = 0;
-                    float bestTime = 0;
 
-                    if (userSnapshot.Child(UserBestTime).Value != null)
-                        bestTime = float.Parse(userSnapshot.Child(UserBestTime).Value.ToString());
                     if (userSnapshot.Child(UserAvatar).Value != null)
                         avatar = int.Parse(userSnapshot.Child(UserAvatar).Value.ToString());
 
@@ -278,10 +288,14 @@ public class FirebaseDatabaseService : MonoBehaviour
 
                     leaderboard.Add(userData);
                 }
-                if (userSnapshot.Key == auth.CurrentUser.UserId)
-                    userPosition = index;
 
-                index++;
+                if (userSnapshot.Key == auth.CurrentUser.UserId)
+                {
+                    if (timeValid)
+                        userPosition = validUserRecords;
+                    else
+                        userPosition = (int)data.ChildrenCount;
+                }
             }
             getLeaderboardResult?.Invoke(leaderboard,userPosition+1);
             getLeaderboardResult = null;

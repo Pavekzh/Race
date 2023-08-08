@@ -3,7 +3,9 @@ using UnityEngine;
 public class MenuBootstrap : MonoBehaviour
 {
     [Header("Systems")]
+    [SerializeField] private FirebaseInit firebaseInit;
     [SerializeField] private FirebaseDatabaseService databaseService;
+    [SerializeField] private FirebaseAuthService authService;
     [SerializeField] private SceneLoader sceneLoader;
     [SerializeField] private UserAvatars userAvatars;
     [Header("UI")]
@@ -15,7 +17,8 @@ public class MenuBootstrap : MonoBehaviour
 
     private void Awake()
     {
-        InitDatabaseService();
+        InitDatabaseService();       
+        InitAuthService();
         InitMainMenuUI();
         InitUserProfileUI();
         InitLeaderboard();
@@ -28,7 +31,7 @@ public class MenuBootstrap : MonoBehaviour
 
     private void InitMainMenuUI()
     {
-        mainMenuUI.Init(sceneLoader,databaseService);
+        mainMenuUI.Init(sceneLoader,databaseService,authService);
     }
 
     private void InitUserProfileUI()
@@ -39,5 +42,10 @@ public class MenuBootstrap : MonoBehaviour
     private void InitDatabaseService()
     {
         databaseService.Init(Firebase.Database.FirebaseDatabase.DefaultInstance, Firebase.Auth.FirebaseAuth.DefaultInstance);
+    }
+
+    private void InitAuthService()
+    {
+        authService.Init(messenger, firebaseInit, Firebase.Auth.FirebaseAuth.DefaultInstance, databaseService);
     }
 }

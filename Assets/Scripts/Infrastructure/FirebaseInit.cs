@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 public class FirebaseInit : MonoBehaviour
 {
-    public bool FirebaseReady { get; set; } = false;
+    public bool FirebaseReady { get => FirebaseApp.DefaultInstance != null; }
 
     public async Task Init()
     {
@@ -17,13 +17,11 @@ public class FirebaseInit : MonoBehaviour
 
             if (dependencyStatus == DependencyStatus.Available)
             {
-                FirebaseReady = true;
                 Debug.Log("Firebase ready");
             }
             else
             {
                 Debug.LogError($"Could not resolve all Firebase dependencies: {dependencyStatus}");
-                FirebaseReady = false;
             }
         });
     }

@@ -14,11 +14,13 @@ public class MainMenuUI : MonoBehaviour
 
     private SceneLoader sceneLoader;
     private FirebaseDatabaseService databaseService;
+    private FirebaseAuthService authService;
 
-    public void Init(SceneLoader sceneLoader,FirebaseDatabaseService databaseService)
+    public void Init(SceneLoader sceneLoader,FirebaseDatabaseService databaseService,FirebaseAuthService authService)
     {
         this.sceneLoader = sceneLoader;
         this.databaseService = databaseService;
+        this.authService = authService;
 
         databaseService.GetSelectedCar(ShowSelectedCar);
 
@@ -56,8 +58,8 @@ public class MainMenuUI : MonoBehaviour
     
     private void Logout()
     {
-        PlayerPrefs.SetString(FirebaseAuthService.SilentEmailPrefsKey, "");
-        PlayerPrefs.SetString(FirebaseAuthService.SilentPasswordPrefsKey, "");
+        authService.LogOut();
+
         sceneLoader.LoadLogin();
     }
 }

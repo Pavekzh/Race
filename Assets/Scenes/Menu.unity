@@ -1356,6 +1356,8 @@ GameObject:
   m_Component:
   - component: {fileID: 339516512}
   - component: {fileID: 339516511}
+  - component: {fileID: 339516514}
+  - component: {fileID: 339516513}
   m_Layer: 0
   m_Name: Firebase
   m_TagString: Untagged
@@ -1390,6 +1392,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &339516513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339516510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69e7192f40304b54da94a4d5b78c1347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &339516514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339516510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16837f7bc37f33e4f84febcb3e6621fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &402272266
 GameObject:
   m_ObjectHideFlags: 0
@@ -6725,7 +6751,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f520d4278da8a64dae29a72657a3891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firebaseInit: {fileID: 339516513}
   databaseService: {fileID: 339516511}
+  authService: {fileID: 339516514}
   sceneLoader: {fileID: 206349711}
   userAvatars: {fileID: 1847316538}
   messenger: {fileID: 229778955}
